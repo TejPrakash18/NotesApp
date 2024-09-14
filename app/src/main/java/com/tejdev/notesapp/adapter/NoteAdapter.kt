@@ -1,5 +1,7 @@
 package com.tejdev.notesapp.adapter
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +17,8 @@ class NoteAdapter(private val notes: List<Note>, private val listener: onNoteCli
         fun onNoteLongClick(note: Note)
     }
 
-    inner class ViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root),
+        Parcelable {
         init {
             binding.apply {
                 root.setOnClickListener {
@@ -36,12 +39,33 @@ class NoteAdapter(private val notes: List<Note>, private val listener: onNoteCli
             }
         }
 
+        constructor(parcel: Parcel) : this(TODO("binding")) {
+        }
+
         fun bind(note: Note) {
             binding.apply {
                 titleNote.text = note.title
                 contentNote.text = note.content
                 val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 dateNote.text = formattedDate.format(note.date)
+            }
+        }
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<ViewHolder> {
+            override fun createFromParcel(parcel: Parcel): ViewHolder {
+                return ViewHolder(parcel)
+            }
+
+            override fun newArray(size: Int): Array<ViewHolder?> {
+                return arrayOfNulls(size)
             }
         }
     }
